@@ -1,0 +1,29 @@
+﻿@model WebScraperApp.Models._IndexSearchResultsPartialViewModel
+
+@if (Model.SearchResults.Any())
+{
+    <table class="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>Engine</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.SearchResults)
+            {
+                <tr>
+                    <td>@item.SearchEngine</td>
+                    <td class="js-search-result-text">@item.ResultText</td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results could be found.</p>
+}

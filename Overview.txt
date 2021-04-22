@@ -1,0 +1,17 @@
+I have created two ASP.NET MVC web applications. The first is a more simplified version, while the second located in WebScraperApp_Two has a business layer to decouple business logic from the application.
+
+New search engines can be added to the application by adding their details to the SearchEngine app setting located in web.config. The string must be in the format:
+
+,SearchEngineName:BaseURL:SelectorText:SelectorType 
+
+Where SelectorType may be either CSS or XPATH.
+
+Languages/Tech used:
+
+C#, XML, HTML, CSS, Bootstrap, Javascript, JQuery, AJAX, Selenium (Web Driver).
+
+'Required' validation has been added to the search term field. Once a search term is entered, a search will be performed in all configured search engines via Chrome browser. A table is then presented to the user with the results in which the search term is highlighted where it appears. 
+
+Additional note:
+
+The Chrome browser currently shows the search being performed to evidence the search actions, however, a snippet of code can be uncommented in the WebScraper.cs class to enable an option that hides the Chrome browser. 

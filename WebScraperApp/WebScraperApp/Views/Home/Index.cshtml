@@ -1,0 +1,121 @@
+﻿@model WebScraperApp.Models.IndexSearchViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<style>
+    #txtSearchTerm {
+        display: inline-block;
+    }
+
+    .val-msg {
+        color: red;
+    }
+
+    .search-term {
+        background-color: yellow;
+        color: black;
+    }
+</style>
+
+<div class="jumbotron text-center">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Web Scraper</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="lead">Welcome to the Universe's favourite web scraper - Web Scraper! Utilising over one search engines to find results for your search terms.</p>
+        </div>
+    </div>
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "submit-search-term-form" }))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.SearchTerm, new { id = "txtSearchTerm", placeholder = "Search Term", @class = "form-control" })
+                    <div id="val-msg-txtSearchTerm" class="val-msg"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-info btn-lg">Get Searching!</button>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-12" id="searchResults">
+
+    </div>
+</div>
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+
+            let ajaxIsInProgress = false;
+
+
+            $('#submit-search-term-form').on('submit', function (e) {
+                e.preventDefault();
+
+                if (ajaxIsInProgress === true) {
+                    return; // prevents multiple executions
+                }
+
+                $('#val-msg-txtSearchTerm').text("");
+
+                ajaxIsInProgress = true;
+
+                const url = '@Url.Action("SearchResults", "Home")';
+                let searchTerm = $('#txtSearchTerm').val();
+                let data = { searchTerm: searchTerm };
+
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    data: data,
+                    context: $('#searchResults')
+
+                }).done(function (d) {
+
+                    if (d === false) {
+                        $('#val-msg-txtSearchTerm').text("A search term is required.");
+                        ajaxIsInProgress = false;
+                        return;
+                    }
+
+                    this.html(d);
+                    highlightSearchTerms(searchTerm);
+                    ajaxIsInProgress = false;
+
+                }).fail(function () {
+
+                    alert("failed");
+                    ajaxIsInProgress = false;
+
+                });
+            });
+        });
+
+        function highlightSearchTerms(searchTerm) {
+            $(".js-search-result-text").each(function (i, e) {
+
+                let originalResultText = $(e).html();
+                let replacementString = '<span class="search-term">' + searchTerm.trim() + '</span>';
+                let newResultText = originalResultText.replace(new RegExp(searchTerm.trim(), 'ig'), replacementString);
+                $(e).html(newResultText);
+
+            });
+        }
+
+    </script>
+
+
+}
+
